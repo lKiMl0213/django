@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+    <title>Home</title>
+</head>
+
+<body>
+    <div class="container-login">
+        <h1>Empresa</h1>
+        <form method="post" action="{{ url_for('user_management.login') }}" onsubmit="handleSubmit(event);">
+            <input type="text" id="login" name="login" required minlength="5" pattern="[a-zA-Z0-9]+" placeholder="Digite seu nome de usuário">
+            <input type="password" id="password" name="password" required minlength="8" placeholder="Digite sua senha">
+            <div class="login-buttons">
+                <input type="submit" value="Login">
+                <button type="button" onclick="window.location.href='{{ url_for('user_management.register') }}';">Registrar-se</button>
+            </div>
+        </form>
+        <a href="{{ url_for('user_management.recovery') }}">Recuperar senha</a>
+    </div>
+
+    <script>
+        function showMessage(message) {
+            alert(message);
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            const form = event.target;
+            const loginInput = document.getElementById('login');
+            loginInput.value = loginInput.value.toLowerCase();
+
+            const formData = new FormData(form);
+
+            fetch(form.action, {
+                    method: form.method,
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        localStorage.setItem('user', data.name);
+                        console.log(data.name);
+                        if (data.user_type === 'rh') {
+                            window.location.href = '/rh';
+                        } else if (data.user_type === 'storage') {
+                            window.location.href = '/storage';
+                        } else if (data.user_type === 'market') {
+                            window.location.href = '/market';
+                        }
+                    } else {
+                        showMessage("Usuário/senha incorretos");
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+
+</html>

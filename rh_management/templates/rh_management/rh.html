@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='rh.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.min.css" />
+    <title>RH</title>
+</head>
+
+<body>
+    <div class="rh-page">
+        <!-- Barra Superior -->
+        <div class="upper-bar">
+            <button onclick="setupForm()">Gerenciar RH</button>
+            <div class="welcome-section">
+                <h1>Bem-vindo <span id="user"></span> ao RH</h1>
+                <button id="logoutButton">Sair</button>
+            </div>
+            <button class="button-action" onclick="show_employees()">Ver Todos os Funcionários</button>
+        </div>
+        <!-- Formulário de Registro -->
+        <div class="form-container" id="formContainer" style="display:none;">
+            <form id="employeeForm" method="POST" action="{{ url_for('rh_management.manage_employee') }}"
+                onsubmit="handleSubmit(event)">
+                <div class="form-section">
+                    <h2>Registrar Funcionário</h2>
+                    <div class="form-group">
+                        <label for="login">Nome de Usuário:</label>
+                        <input type="text" id="login" name="login" class="input-field" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Senha:</label>
+                        <input type="password" id="password" name="password" class="input-field"
+                            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                            title="A senha deve conter pelo menos um número, uma letra maiúscula e uma letra minúscula, e pelo menos 8 caracteres"
+                            required autocomplete="new-password">
+                    </div>
+                    <div id="message">
+                        <small>A senha deve conter:</small>
+                        <div class="rules">
+                            <p id="letter" class="invalid"><span class="icon">❌</span> Uma letra minúscula</p>
+                            <p id="capital" class="invalid"><span class="icon">❌</span> Uma letra maiúscula</p>
+                            <p id="number" class="invalid"><span class="icon">❌</span> Um número</p>
+                            <p id="length" class="invalid"><span class="icon">❌</span> e pelo menos 8 caracteres</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirme sua senha:</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" class="input-field"
+                            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required autocomplete="new-password">
+                    </div>
+                    <div id="messageConfirm">
+                        <div class="rulesConfirm">
+                            <p id="match" class="invalid"><span class="icon">❌</span> As senhas não correspondem</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <label for="code">Código de Acesso:</label>
+                    <p id="code" class="input-field"></p>
+                    <button type="button" class="btn-primary" onclick="generateCode()">Gerar Código</button>
+                </div>
+                <!-- Dados Pessoais -->
+                <div class="form-section">
+                    <h3>Dados Pessoais</h3>
+                    <div class="form-group">
+                        <label for="myfile">Foto do Funcionário 3x4:</label>
+                        <input type="file" id="myfile" name="myfile" class="input-field">
+                        <small class="field-instructions">Formato: .jpg, .jpeg, .png (máximo: 5MB)</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Nome Completo do Funcionário:</label>
+                        <input type="text" id="name" name="name" class="input-field" required
+                            placeholder="Nome Completo do Funcionário">
+                    </div>
+                    <div class="" form-group"">
+                        <label for="phone">Telefone:</label>
+                        <input type="tel" id="phone" name="phone" value="" />
+                    </div>
+                    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+                    <script
+                        src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"></script>
+                </div>
+                <div class="form-section">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" id="email" name="email" class="input-field" required
+                                placeholder="Digite seu email">
+                        </div>
+                        <div class="form-group">
+                            <label for="cpf">CPF:</label>
+                            <input type="text" id="cpfInput" name="cpf" class="input-field" required
+                                placeholder="999.999.999-99">
+                            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+                            <script
+                                src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+                        </div>
+                        <div id="messageCpf">
+                            <div class="rulesCPF">
+                                <p id="length2" class="invalido"><span class="icon">❌</span> CPF inválido</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="birthday">Data de Nascimento:</label>
+                        <div class="select-container">
+                            <select name="birthdayDay" required>
+                                <option value="">Dia</option>
+                                {% for day in range(1, 32) %}
+                                <option value="{{ day }}">{{ day }}</option>
+                                {% endfor %}
+                            </select>
+                            <select name="birthdayMonth" required>
+                                <option value="">Mês</option>
+                                {% set months = {
+                                1: "Janeiro",
+                                2: "Fevereiro",
+                                3: "Março",
+                                4: "Abril",
+                                5: "Maio",
+                                6: "Junho",
+                                7: "Julho",
+                                8: "Agosto",
+                                9: "Setembro",
+                                10: "Outubro",
+                                11: "Novembro",
+                                12: "Dezembro" } %}
+                                {% for month in range(1, 13) %}
+                                <option value="{{ " %02d"|format(month) }}">{{ months[month] }}</option>
+                                {% endfor %}
+                            </select>
+                            <select name="birthdayYear" required>
+                                <option value="">Ano</option>
+                                {% for year in range(1900, 2024) %}
+                                <option value="{{ year }}">{{ year }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">Sexo:</label>
+                            <select name="gender" required>
+                                <option value="">Sexo</option>
+                                <option value="Masculino">Masculino</option>
+                                <option value="Feminino">Feminino</option>
+                                <option value="Outro">Outro</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="maritalStatus">Estado Civil:</label>
+                            <select name="maritalStatus" required>
+                                <option value="">Estado Civil</option>
+                                <option value="Solteiro">Solteiro</option>
+                                <option value="Casado">Casado</option>
+                                <option value="Divorciado">Divorciado</option>
+                                <option value="Viuvo">Viúvo</option>
+                            </select>
+                        </div>
+                        <label for="address">Endereço:</label>
+                        <input type="text" id="address" name="address" required placeholder="Digite seu endereço">
+                        <div id="cep"></div>
+                        <label for="cep">CEP:</label>
+                        <input type="text" id="cep" name="cep" required placeholder="Digite seu CEP">
+                    </div>
+                    <div class="form-section">
+                        <label for="academicFormation">Formação Acadêmica:</label>
+                        <select name="academicFormation" required>
+                            <option value="">Formação Acadêmica</option>
+                            <option value="Ensino Médio">Ensino Médio</option>
+                            <option value="Ensino Superior">Ensino Superior</option>
+                            <option value="Pós-Graduação">Pós-Graduação</option>
+                            <option value="Mestrado">Mestrado</option>
+                            <option value="Doutorado">Doutorado</option>
+                        </select>
+                    </div>
+                    <div class="form-section">
+                        <label for="salary">Salário:</label>
+                        <input type="number" id="salary" name="salary" required step="0.01" min="0">
+                    </div>
+                    <div class="form-section">
+                        <label for="department">Departamento:</label>
+                        <div class="select-container">
+                            <select name="type" required>
+                                <option value="">Tipo</option>
+                                <option value="rh">Gerente</option>
+                                <option value="market">Vendedor</option>
+                                <option value="storage">Atendente</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-section">
+                        <label for="position">Cargo:</label>
+                        <input type="text" id="position" name="position" required placeholder="Digite o cargo">
+                    </div>
+                    <div class="form-section">
+                        <h2>Benefícios:</h2>
+                        <div class="benefit-list">
+                            <div class="checkbox-wrapper">
+                                <input type="checkbox" id="benefits1" class="inp-cbx" />
+                                <label for="benefits1" class="cbx">
+                                    <span>
+                                        <svg viewBox="0 0 12 10" height="10px" width="12px">
+                                            <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                                        </svg>
+                                    </span>
+                                    <span>Vale Refeição</span>
+                                </label>
+                            </div>
+                            <div class="checkbox-wrapper">
+                                <input type="checkbox" id="benefits2" class="inp-cbx" />
+                                <label for="benefits2" class="cbx">
+                                    <span>
+                                        <svg viewBox="0 0 12 10" height="10px" width="12px">
+                                            <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                                        </svg>
+                                    </span>
+                                    <span>Vale Transporte</span>
+                                </label>
+                            </div>
+                            <div class="checkbox-wrapper">
+                                <input type="checkbox" id="benefits3" class="inp-cbx" />
+                                <label for="benefits3" class="cbx">
+                                    <span>
+                                        <svg viewBox="0 0 12 10" height="10px" width="12px">
+                                            <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                                        </svg>
+                                    </span>
+                                    <span>Plano de Saúde</span>
+                                </label>
+                            </div>
+                            <div class="checkbox-wrapper">
+                                <input type="checkbox" id="benefits4" class="inp-cbx" />
+                                <label for="benefits4" class="cbx">
+                                    <span>
+                                        <svg viewBox="0 0 12 10" height="10px" width="12px">
+                                            <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                                        </svg>
+                                    </span>
+                                    <span>Plano Odontológico</span>
+                                </label>
+                            </div>
+                            <div class="checkbox-wrapper">
+                                <input type="checkbox" id="benefits5" class="inp-cbx" />
+                                <label for="benefits5" class="cbx">
+                                    <span>
+                                        <svg viewBox="0 0 12 10" height="10px" width="12px">
+                                            <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                                        </svg>
+                                    </span>
+                                    <span>Seguro de Vida</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="benefit-list">
+                            <div class="checkbox-wrapper">
+                                <input type="checkbox" id="benefits6" class="inp-cbx" />
+                                <label for="benefits6" class="cbx">
+                                    <span>
+                                        <svg viewBox="0 0 12 10" height="10px" width="12px">
+                                            <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                                        </svg>
+                                    </span>
+                                    <span>Auxílio Creche</span>
+                                </label>
+                            </div>
+                            <div class="checkbox-wrapper">
+                                <input type="checkbox" id="benefits7" class="inp-cbx" />
+                                <label for="benefits7" class="cbx">
+                                    <span>
+                                        <svg viewBox="0 0 12 10" height="10px" width="12px">
+                                            <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                                        </svg>
+                                    </span>
+                                    <span>Auxílio Alimentação</span>
+                                </label>
+                            </div>
+                            <div class="checkbox-wrapper">
+                                <input type="checkbox" id="benefits8" class="inp-cbx" />
+                                <label for="benefits8" class="cbx">
+                                    <span>
+                                        <svg viewBox="0 0 12 10" height="10px" width="12px">
+                                            <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                                        </svg>
+                                    </span>
+                                    <span>Gympass</span>
+                                </label>
+                            </div>
+                            <div class="checkbox-wrapper">
+                                <input type="checkbox" id="benefits9" class="inp-cbx" />
+                                <label for="benefits9" class="cbx">
+                                    <span>
+                                        <svg viewBox="0 0 12 10" height="10px" width="12px">
+                                            <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                                        </svg>
+                                    </span>
+                                    <span>Participação nos Lucros</span>
+                                </label>
+                            </div>
+                            <div class="checkbox-wrapper">
+                                <input type="checkbox" id="benefits10" class="inp-cbx" />
+                                <label for="benefits10" class="cbx">
+                                    <span>
+                                        <svg viewBox="0 0 12 10" height="10px" width="12px">
+                                            <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                                        </svg>
+                                    </span>
+                                    <span>14º Salário</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="admissionDate">Data de Admissão:</label>
+                    <div class="select-container">
+                        <select name="admissionDateDay" required>
+                            <option value="">Dia</option>
+                            {% for day in range(1, 32) %}
+                            <option value="{{ day }}">{{ day }}</option>
+                            {% endfor %}
+                        </select>
+                        <select name="admissionDateMonth" required>
+                            <option value="">Mês</option>
+                            {% set months = {
+                            1: "Janeiro",
+                            2: "Fevereiro",
+                            3: "Março",
+                            4: "Abril",
+                            5: "Maio",
+                            6: "Junho",
+                            7: "Julho",
+                            8: "Agosto",
+                            9: "Setembro",
+                            10: "Outubro",
+                            11: "Novembro",
+                            12: "Dezembro" } %}
+                            {% for month in range(1, 13) %}
+                            <option value="{{ " %02d"|format(month) }}">{{ months[month] }}</option>
+                            {% endfor %}
+                        </select>
+                        <select name="admissionDateYear" required>
+                            <option value="">Ano</option>
+                            {% for year in range(2024, 2040) %}
+                            <option value="{{ year }}">{{ year }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-section">
+                        <label for="employeeStatus">Status:</label>
+                        <select id="status" name="status" required>
+                            <option value="">Status</option>
+                            <option value="active">Ativo</option>
+                            <option value="on_vacation">Em férias</option>
+                            <option value="sick">Doente</option>
+                            <option value="inactive">Inativo</option>
+                        </select>
+                        <div id="dateOfDismissal" class="form-section">
+                            <label for="dateOfDismissal">Data de Demissão:</label>
+                            <div class="select-container-data" required>
+                                <select name="dateOfDismissalDay" required>
+                                    <option value="">Dia</option>
+                                    {% for day in range(1, 32) %}
+                                    <option value="{{ day }}">{{ day }}</option>
+                                    {% endfor %}
+                                </select>
+                                <select name="dateOfDismissalMonth" required>
+                                    <option value="">Mês</option>
+                                    {% set months = {
+                                    1: "Janeiro",
+                                    2: "Fevereiro",
+                                    3: "Março",
+                                    4: "Abril",
+                                    5: "Maio",
+                                    6: "Junho",
+                                    7: "Julho",
+                                    8: "Agosto",
+                                    9: "Setembro",
+                                    10: "Outubro",
+                                    11: "Novembro",
+                                    12: "Dezembro" } %}
+                                    {% for month in range(1, 13) %}
+                                    <option value="{{ " %02d"|format(month) }}">{{ months[month] }}</option>
+                                    {% endfor %}
+                                </select>
+                                <select name="dateOfDismissalYear" required>
+                                    <option value="">Ano</option>
+                                    {% for year in range(2024, 2040) %}
+                                    <option value="{{ year }}">{{ year }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            </select>
+                        </div>
+                        <div class="form-section" id="buttonsContainer" style="display:none;">
+                            <button type="button" onclick="add_employee()">Salvar</button>
+                        </div>
+                        <div id="employeeListContainer" style="display:none;"></div>
+            </form>
+        </div>
+    </div>
+    </div>
+<script src="{{ url_for('static', filename='script/rh.js') }}?t={{ time }}"></script>
+
+
+</body>
+
+</html>
