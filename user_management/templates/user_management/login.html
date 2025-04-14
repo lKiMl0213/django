@@ -13,16 +13,16 @@
 <body>
     <div class="container-login">
         <h1>Empresa</h1>
-        <form method="post" action="{% url 'user_management:login' %}" onsubmit="handleSubmit(event);">
+        <form method="post" action="{% url 'login' %}" onsubmit="handleSubmit(event);">
             {% csrf_token %}
             <input type="text" id="login" name="login" required minlength="5" pattern="[a-zA-Z0-9]+" placeholder="Digite seu nome de usuário">
             <input type="password" id="password" name="password" required minlength="8" placeholder="Digite sua senha">
             <div class="login-buttons">
                 <input type="submit" value="Login">
-                <button type="button" onclick="window.location.href='{% url 'user_management:register' %}';">Registrar-se</button>
+                <button type="button" onclick="window.location.href='{% url 'register' %}';">Registrar-se</button>
             </div>
         </form>
-        <a href="{% url 'user_management:recovery' %}">Recuperar senha</a>
+        <a href="{% url 'recovery' %}">Recuperar senha</a>
     </div>
 </body>
 

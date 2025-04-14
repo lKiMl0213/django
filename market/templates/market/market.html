@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+{% load static %}
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='market.css') }}">
+    <link rel="stylesheet" href="{% static 'market.css' %}">
     <title>Market</title>
 </head>
 <body>
     <div class="market-page">
         <h1> Bem-Vindo ao mercado.<br>Atendente: <span id="user"></span> </h1>
         <div class="logo">
-            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" style="width: 300px; height: 300px;">
+            <img src="{% static 'logo.png' %}" alt="Logo" style="width: 300px; height: 300px;">
         </div>
         <div class="top-menu">
             <button id="check_price">Verificar Preço<br>F</button>
@@ -65,6 +67,7 @@
         </div>
     </div>
 
-    <script src="{{ url_for('static', filename='script/market.js') }}"></script>
+    <script src="{% static 'market/script/market.js' %}"></script>
+
 </body>
 </html>

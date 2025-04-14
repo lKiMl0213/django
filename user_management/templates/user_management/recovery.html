@@ -40,13 +40,13 @@
 <body>
     <div class="container-recovery">
         <h1>Recuperar Senha</h1>
-        <form method="post" action="{% url 'user_management:recovery' %}" onsubmit="handleSubmit(event)">
+        <form method="post" action="{% url 'recovery' %}" onsubmit="handleSubmit(event)">
             {% csrf_token %}
             <input type="text" id="login" name="login" required minlength="5" placeholder="Insira seu nome de usuário/email">
 
             <input type="submit" value="Recuperar">
         </form>
-        <a href="{% url 'user_management:login' %}">Voltar</a>
+        <a href="{% url 'login' %}">Voltar</a>
     </div>
 </body>
 

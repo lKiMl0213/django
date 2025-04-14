@@ -12,7 +12,7 @@
 <body>
     <div class="container-register">
         <h1>Registrar Usuário</h1>
-        <form method="post" action="{% url 'user_management:register' %}" onsubmit="handleSubmit(event);">
+        <form method="post" action="{% url 'register' %}" onsubmit="handleSubmit(event);">
             {% csrf_token %}
             <label for="login">Nome de Usuário:</label>
             <input type="text" id="login" name="login" required minlength="5" pattern="[a-z0-9]+" placeholder="Digite seu nome de usuário">
