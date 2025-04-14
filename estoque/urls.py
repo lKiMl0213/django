@@ -1,8 +1,9 @@
 from django.urls import path
-from . import views
+from .views import estoque_view  # importa a view de estoque
 
 app_name = 'estoque'
 
 urlpatterns = [
-    path('', views.home_view, name='home'),
+    path('estoque/', estoque_view, name='estoque'),  # URL para a view de estoque
+
 ]

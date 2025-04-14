@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
+{% load static %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='recovery.css') }}">
+    <link rel="stylesheet" href="{% static 'recovery.css' %}">
     <title>Recuperar Senha</title>
     <script>
         function showMessage(message) {
@@ -40,12 +40,13 @@
 <body>
     <div class="container-recovery">
         <h1>Recuperar Senha</h1>
-        <form method="post" action="{{ url_for('user_management.recovery') }}" onsubmit="handleSubmit(event)">
+        <form method="post" action="{% url 'user_management:recovery' %}" onsubmit="handleSubmit(event)">
+            {% csrf_token %}
             <input type="text" id="login" name="login" required minlength="5" placeholder="Insira seu nome de usuário/email">
 
             <input type="submit" value="Recuperar">
         </form>
-        <a href="{{ url_for('home') }}">Voltar</a>
+        <a href="{% url 'user_management:login' %}">Voltar</a>
     </div>
 </body>
 

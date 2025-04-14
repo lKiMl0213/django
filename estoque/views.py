@@ -4,7 +4,7 @@ from django.views.decorators.http import require_http_methods
 from datetime import datetime
 from .models import Product
 
-def home_view(request):
+def estoque_view(request):
     return render(request, 'estoque/storage.html')
 
 @require_http_methods(["GET", "POST"])

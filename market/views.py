@@ -3,7 +3,7 @@ from .models import Product
 from .forms import AddToCartForm
 from django.contrib import messages
 
-def home_view(request):
+def market_view(request):
     return render(request, 'market/market.html')
 
 def product_list(request):

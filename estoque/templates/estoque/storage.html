@@ -1,15 +1,15 @@
 <html lang="pt-BR">
-
+{% load static %}
 </html>
 
 <head>
     <meta charset="UTF-8">
     <title>Estoque</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='storage.css') }}">
+    <link rel="stylesheet" href="{% static 'estoque/style.css' %}">
 </head>
 
-<div class= "estoque-page">
+<div class="estoque-page"></div>
     <body class="storage-page">
         <div class="upper-bar">
             <button onclick="setupForm()">Gerenciar <br> Estoque</button>
@@ -20,8 +20,7 @@
             <button onclick="showProducts()">Ver Todos <br> os Produtos</button>
         </div>
         <div id="formContainer" style="display:none;">
-        <form id="productForm" method="POST" action="{{ url_for('estoque.manage_product') }}"
-            onsubmit="handleSubmit(event)">
+        <form id="productForm" method="POST" action="{% url 'estoque:manage_product' %}" onsubmit="handleSubmit(event)">
             <label for="productBarcode">Código de Barras:</label>
             <div class="input-container">
                 <input type="text" id="productBarcode" name="barcode">
@@ -88,7 +87,7 @@
             document.getElementById('user').textContent = user ? user : '';
             document.getElementById('logoutButton').addEventListener('click', function() {
                 localStorage.removeItem('user');
-                window.location.href = '{{ url_for('home') }}';
+                window.location.href = '{% url 'login' %}';
             });
         });
 
@@ -108,7 +107,7 @@
             $('#additionalFields').find('input, select').val('');
             if (barcode) {
                 $.ajax({
-                    url: '{{ url_for('estoque.manage_product') }}?action=check_barcode',
+                    url: '{% url 'estoque:manage_product' %}?action=check_barcode',
                     type: 'GET',
                     data: { barcode: barcode }, // , barcodes: barcodes
                     success: function (product) {
@@ -167,7 +166,7 @@
             const form = $('#productForm');
             const formData = new FormData(form[0]);
             $.ajax({
-                url: '{{ url_for('estoque.manage_product') }}?action=add_product',
+                url: '{% url 'estoque:manage_product' %}?action=add_product',
                 type: 'POST',
                 data: formData,
                 processData: false,
@@ -194,7 +193,7 @@
             }
             if (confirm('Tem certeza que deseja remover o produto?')) {
                 $.ajax({
-                    url: '{{ url_for('estoque.manage_product') }}?action=remove_product',
+                    url: '{% url 'estoque:manage_product' %}?action=remove_product',
                     type: 'POST',
                     data: { barcode: barcode },
                     success: function (data) {
@@ -211,7 +210,7 @@
         }
         function loadProducts() {
             $.ajax({
-                url: '{{ url_for('estoque.manage_product') }}?action=list_products',
+                url: '{% url 'estoque:manage_product' %}?action=list_products',
                 type: 'GET',
                 success: function (data) {
                     if (data.success) {
@@ -226,12 +225,12 @@
                                         '<th>Quantidade</th>' +
                                         '<th>Preço de Compra</th>' +
                                         '<th>Preço de Venda</th>' +
-                                        '<th>Data de Validade</th>' +
-                                        '<th>Ações</th>' +
-                                    '</tr>' +
-                                '</thead>' +
-                                '<tbody>' +
-                                '</tbody>' +
+                                        '<th>Data de Validade</th>'+
+                                        '<th>Ações</th>'+
+                                    '</tr>'+
+                                '</thead>'+
+                                '<tbody>'+
+                                '</tbody>'+
                             '</table>'
                         );
                         let tbody = productList.find('tbody')
