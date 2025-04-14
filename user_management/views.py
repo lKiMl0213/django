@@ -42,6 +42,7 @@ def login_view(request):
     return render(request, 'user_management/login.html', {'form': form})
 
 
+@dates
 def register_view(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
@@ -84,9 +85,8 @@ def register_view(request):
     else:
         form = RegisterForm()
         context = {'form': form}
-        context.update(dates())
+        # Não precisa do context.update(dates()), pois o decorador já faz isso
         return render(request, 'user_management/register.html', context)
-
 
 
 def recovery_view(request):
