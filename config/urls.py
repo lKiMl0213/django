@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from user_management.views import login_view, register_view, recovery_view
-from estoque.views import estoque_view, manage_product
+from estoque.views import estoque_view
 from market.views import market_view
 
 urlpatterns = [
@@ -14,7 +14,8 @@ urlpatterns = [
 
     # Apps
     path('user_management/', include('user_management.urls')), 
-    path('storage/', estoque_view, name='estoque'),
+    path('storage/', estoque_view, name='estoque'),  # URL para a view de estoque
+    path('storage/', include('estoque.urls')),  # URL para a view de estoque
     path('market/', market_view, name='market'),
     path('rh/', include('rh_management.urls')),
 ]

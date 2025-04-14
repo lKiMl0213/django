@@ -21,6 +21,7 @@
     <main>
         <div id="formContainer" style="display:none;">
             <form id="productForm" method="POST" action="{% url 'estoque:manage_product' %}" onsubmit="handleSubmit(event)">
+                {% csrf_token %}
                 <label for="productBarcode">Código de Barras:</label>
                 <div class="input-container">
                     <input type="text" id="productBarcode" name="barcode" required>
@@ -42,16 +43,15 @@
 
                     <label for="expirationDate">Data de validade:</label>
                     <div class="select-container-data">
-                        <select name="month" required>
+                        <select name="month" id="productMonth" required>
                             <option value="">Mês</option>
-                            {% for month in range(1, 13) %}
-                                <option value="{{ "%02d"|format(month) }}">{{ month|date:"F" }}</option>
+                            {% for month in months %}
+                                <option value="{{ month }}">{{ month }}</option>
                             {% endfor %}
                         </select>
-
-                        <select name="year" required>
+                        <select name="year" id="productYear" required>
                             <option value="">Ano</option>
-                            {% for year in range(2024, 2040) %}
+                            {% for year in years %}
                                 <option value="{{ year }}">{{ year }}</option>
                             {% endfor %}
                         </select>

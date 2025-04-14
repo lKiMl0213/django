@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from .models import User
 from .forms import LoginForm, RegisterForm, RecoveryForm
 from passlib.hash import scrypt
-from datetime import datetime
+from utils.functions import dates
 
 def login_view(request):
     if request.method == 'POST':
@@ -80,22 +80,13 @@ def register_view(request):
                 return JsonResponse({'success': True, 'message': 'Usuário registrado com sucesso!'})
             except Exception as e:
                 return JsonResponse({'success': False, 'message': f'Ocorreu um erro: {str(e)}'})
+    
     else:
         form = RegisterForm()
+        context = {'form': form}
+        context.update(dates())
+        return render(request, 'user_management/register.html', context)
 
-    # Passa os dados necessários para o template
-    current_year = datetime.now().year
-    days = range(1, 32)
-    months = range(1, 13)
-    years = range(current_year - 100, current_year + 1)  # Passando um intervalo de anos
-
-    return render(request, 'user_management/register.html', {
-        'form': form,
-        'current_year': current_year,
-        'days': days,
-        'months': months,
-        'years': years,
-    })
 
 
 def recovery_view(request):

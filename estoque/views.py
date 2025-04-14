@@ -1,15 +1,19 @@
+from datetime import datetime
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
-from datetime import datetime
 from .models import Product
 
+# Página principal do estoque
 def estoque_view(request):
     return render(request, 'estoque/storage.html')
 
+# Gerenciador de produtos (GET e POST)
 @require_http_methods(["GET", "POST"])
 def manage_product(request):
-    action = request.GET.get('action')
+    action = request.GET.get('action') or request.POST.get('action')
+
+    # ==== GET ====
     if request.method == 'GET':
         if action == 'check_barcode':
             barcode = request.GET.get('barcode')
@@ -45,6 +49,7 @@ def manage_product(request):
                 ]
             })
 
+    # ==== POST ====
     elif request.method == 'POST':
         if action == 'add_product':
             data = request.POST
@@ -76,3 +81,6 @@ def manage_product(request):
                 return JsonResponse({'success': True, 'message': "Produto removido com sucesso."})
             except Product.DoesNotExist:
                 return JsonResponse({'success': False, 'message': "Produto não encontrado."})
+
+    # ==== Fallback ====
+    return JsonResponse({'success': False, 'message': "Ação inválida ou método não permitido."})
