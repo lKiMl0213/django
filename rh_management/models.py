@@ -1,7 +1,8 @@
 from django.db import models
 
+
 class Employee(models.Model):
-    photo = models.ImageField(upload_to='photos/', null=True, blank=True)
+    photo = models.ImageField(upload_to="photos/", null=True, blank=True)
     code = models.CharField(max_length=20, unique=True)
     login = models.CharField(max_length=100, unique=True)
     password = models.CharField(max_length=256)
@@ -18,18 +19,8 @@ class Employee(models.Model):
     salary = models.DecimalField(max_digits=10, decimal_places=2)
     department = models.CharField(max_length=100)
     position = models.CharField(max_length=100)
-    
-    # Simplificação: benefits separados em campos simples (pode virar um JSONField se preferir)
-    benefits1 = models.CharField(max_length=100, blank=True, null=True)
-    benefits2 = models.CharField(max_length=100, blank=True, null=True)
-    benefits3 = models.CharField(max_length=100, blank=True, null=True)
-    benefits4 = models.CharField(max_length=100, blank=True, null=True)
-    benefits5 = models.CharField(max_length=100, blank=True, null=True)
-    benefits6 = models.CharField(max_length=100, blank=True, null=True)
-    benefits7 = models.CharField(max_length=100, blank=True, null=True)
-    benefits8 = models.CharField(max_length=100, blank=True, null=True)
-    benefits9 = models.CharField(max_length=100, blank=True, null=True)
-    benefits10 = models.CharField(max_length=100, blank=True, null=True)
+
+    benefits = models.ManyToManyField(to="rh_management.Benefit")
 
     admission_date = models.DateField()
     status = models.CharField(max_length=20)
@@ -38,3 +29,10 @@ class Employee(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.code})"
+
+
+class Benefit(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name

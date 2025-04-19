@@ -1,8 +1,12 @@
 from django import forms
 
+from .models import User
+
+
 class LoginForm(forms.Form):
     login = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput)
+
 
 class RegisterForm(forms.Form):
     login = forms.CharField()
@@ -15,5 +19,21 @@ class RegisterForm(forms.Form):
     email = forms.EmailField()
     type = forms.CharField()
 
+
 class RecoveryForm(forms.Form):
     login = forms.CharField()
+
+
+# Model forms
+class UserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = [
+            "login",
+            "password",
+            "name",
+            "birthday",
+            "cpf",
+            "email",
+            "type",
+        ]
