@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     "storage",
     "hr_management",
     "market",
+    "users",
 ]
 
 MIDDLEWARE = [

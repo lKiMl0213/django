@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
-from .models import Employee
-from .forms import EmployeeForm
+# from .models import Employee
+# from .forms import EmployeeForm
 from time import time
 
 def hr_view(request):

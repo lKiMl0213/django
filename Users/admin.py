@@ -1,14 +1,21 @@
-from django.contrib import admin, messages, make_password
+from django.contrib import admin, messages
+from django.contrib.auth.hashers import make_password
 from .models import Benefit, Employee, Address
 from .forms import EmployeeForm
 import random
 import string
 
 
+class AddressInline(admin.StackedInline):
+    model = Address
+    can_delete = False
+    verbose_name_plural = 'Endereço'
+    fk_name = 'employee'
+
 @admin.register(Employee)
 class EmployeeAdmin(admin.ModelAdmin):
-    form = EmployeeForm  # <--- Aqui liga o formulário
-
+    form = EmployeeForm 
+    inlines = [AddressInline]
     list_display = (
         "name",
         "code",
@@ -54,9 +61,6 @@ class EmployeeAdmin(admin.ModelAdmin):
         ("Job Info", {
             "fields": ("code", "department", "position", "salary", "benefits", "admission_date", "status", "inactive_status", "dismissal_date")
         }),
-        ("Address Info", {
-            "fields": ("address",)
-        }),
         ("Education Info", {
             "fields": ("academic_formation",)
         }),
@@ -80,9 +84,3 @@ class BenefitAdmin(admin.ModelAdmin):
     search_fields = ("name",)
 
 
-@admin.register(Address)
-class AddressAdmin(admin.ModelAdmin):
-    list_display = ("street", "number", "city", "state", "zip_code", "country")
-    search_fields = ("street", "city", "state", "zip_code", "country")
-    list_filter = ("state", "country")
-    ordering = ("city", "street")

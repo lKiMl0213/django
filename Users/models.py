@@ -3,6 +3,7 @@ from django.contrib.auth.hashers import make_password
 
 
 class Address(models.Model):
+    employee = models.ForeignKey('Employee', on_delete=models.CASCADE, null=True, blank=True, related_name='addresses')
     zip_code = models.CharField(max_length=20)
     city = models.CharField(max_length=100)
     state = models.CharField(max_length=100)
@@ -13,10 +14,7 @@ class Address(models.Model):
     
     def __str__(self):
         return f"{self.street}, {self.city}, {self.state}, {self.zip_code}, {self.country}, {self.number}, {self.complement}"
-    
-    class Meta:
-        verbose_name = "Address"
-        verbose_name_plural = "Addresses"
+
 
 
 
@@ -61,7 +59,6 @@ class Employee(models.Model):
     birth_date = models.DateField()
     gender = models.CharField(max_length=1, choices=GenderChoices.choices)
     marital_status = models.CharField(max_length=10, choices=MaritalStatusChoices.choices)
-    address = models.OneToOneField(Address, on_delete=models.CASCADE, null=True, blank=True)
     academic_formation = models.CharField(max_length=100)
     salary = models.DecimalField(max_digits=10, decimal_places=2)
     department = models.CharField(max_length=100)
