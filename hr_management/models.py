@@ -20,7 +20,7 @@ class Employee(models.Model):
     department = models.CharField(max_length=100)
     position = models.CharField(max_length=100)
 
-    benefits = models.ManyToManyField(to="rh_management.Benefit")
+    benefits = models.ManyToManyField(to="hr_management.Benefit")
 
     admission_date = models.DateField()
     status = models.CharField(max_length=20)

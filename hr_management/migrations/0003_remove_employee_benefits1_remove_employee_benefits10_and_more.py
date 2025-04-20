@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('rh_management', '0002_benefit'),
+        ('hr_management', '0002_benefit'),
     ]
 
     operations = [
@@ -53,6 +53,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='employee',
             name='benefits',
-            field=models.ManyToManyField(to='rh_management.benefit'),
+            field=models.ManyToManyField(to='hr_management.benefit'),
         ),
     ]

@@ -1,8 +1,9 @@
 from django.contrib import admin
 from django.urls import path, include
 from user_management.views import login_view, register_view, recovery_view
-from estoque.views import estoque_view
+from storage.views import storage_view
 from market.views import market_view
+from hr_management.views import hr_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -14,8 +15,8 @@ urlpatterns = [
 
     # Apps
     path('user_management/', include('user_management.urls')), 
-    path('storage/', estoque_view, name='estoque'),  # URL para a view de estoque
-    path('storage/', include('estoque.urls')),  # URL para a view de estoque
+    path('storage/', storage_view, name='storage'),  # URL para a view de estoque
+    path('storage/', include('storage.urls')),  # URL para a view de estoque
     path('market/', market_view, name='market'),
-    path('rh/', include('rh_management.urls')),
+    path('hr/', include('hr_management.urls')),
 ]

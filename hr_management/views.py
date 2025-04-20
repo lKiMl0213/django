@@ -4,14 +4,14 @@ from .models import Employee
 from .forms import EmployeeForm
 from time import time
 
-def home_view(request):
-    return render(request, 'rh_management/rh.html')
+def hr_view(request):
+    return render(request, 'hr_management/hr.html')
 
 def manage_employee(request):
     if request.method == 'GET':
         action = request.GET.get('action')
         if not action:
-            return render(request, 'rh.html', {'time': int(time())})
+            return render(request, 'hr.html', {'time': int(time())})
         
         if action == 'check_code':
             code = request.GET.get('code')

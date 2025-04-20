@@ -5,8 +5,8 @@ from django.views.decorators.http import require_http_methods
 from .models import Product
 
 # Página principal do estoque
-def estoque_view(request):
-    return render(request, 'estoque/storage.html')
+def storage_view(request):
+    return render(request, 'storage/storage.html')
 
 # Gerenciador de produtos (GET e POST)
 @require_http_methods(["GET", "POST"])

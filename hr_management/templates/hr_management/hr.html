@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='rh.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='hr.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.min.css" />
-    <title>RH</title>
+    <title>Recursos Humanos</title>
 </head>
 
 <body>
@@ -22,7 +22,7 @@
         </div>
         <!-- Formulário de Registro -->
         <div class="form-container" id="formContainer" style="display:none;">
-            <form id="employeeForm" method="POST" action="{{ url_for('rh_management.manage_employee') }}"
+            <form id="employeeForm" method="POST" action="{{ url_for('hr_management.manage_employee') }}"
                 onsubmit="handleSubmit(event)">
                 <div class="form-section">
                     <h2>Registrar Funcionário</h2>
@@ -185,7 +185,7 @@
                         <div class="select-container">
                             <select name="type" required>
                                 <option value="">Tipo</option>
-                                <option value="rh">Gerente</option>
+                                <option value="hr">Gerente</option>
                                 <option value="market">Vendedor</option>
                                 <option value="storage">Atendente</option>
                             </select>
@@ -402,7 +402,7 @@
         </div>
     </div>
     </div>
-<script src="{{ url_for('static', filename='script/rh.js') }}?t={{ time }}"></script>
+<script src="{{ url_for('static', filename='script/hr.js') }}?t={{ time }}"></script>
 
 
 </body>

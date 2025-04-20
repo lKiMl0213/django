@@ -18,10 +18,10 @@ def login_view(request):
                 user = User.objects.get(login=login)
                 if scrypt.verify(password, user.password):
                     print(user.type)
-                    if user.type == "rh":
-                        return redirect("rh:rh")
-                    elif user.type == "estoque":
-                        return redirect("estoque:estoque")
+                    if user.type == "HR":
+                        return redirect("hr:hr")
+                    elif user.type == "STORAGE":
+                        return redirect("storage:storage")
                     elif user.type == "market":
                         return redirect("market:market")
                     else:
@@ -60,7 +60,7 @@ def register_view(request):
             year = form.cleaned_data["year"]
             cpf = form.cleaned_data["cpf"]
             email = form.cleaned_data["email"]
-            user_type = form.cleaned_data["type"]
+            user_type = form.cleaned_data["type"].upper()  # Certifique-se de que o valor seja maiúsculo
 
             # Verifica se o login ou email já existem
             if User.objects.filter(login=login).exists():

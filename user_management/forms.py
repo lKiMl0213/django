@@ -17,7 +17,7 @@ class RegisterForm(forms.Form):
     year = forms.IntegerField(min_value=1900, max_value=2100)
     cpf = forms.CharField()
     email = forms.EmailField()
-    type = forms.CharField()
+    type = forms.ChoiceField(choices=User.UserType.choices)
 
 
 class RecoveryForm(forms.Form):
